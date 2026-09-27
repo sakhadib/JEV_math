@@ -1,0 +1,15 @@
+# secrets
+.env
+
+# dataset — not licensed for release, do not commit
+mathqa.jsonl
+mathqa.jsonl.bak
+
+# results — embed dataset content, keep local
+results.jsonl
+results*.jsonl
+
+# python
+venv/
+__pycache__/
+*.pyc
