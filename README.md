@@ -14,7 +14,19 @@ See [`plan.md`](plan.md) for API details and the full research program.
 {"id": "mathqa-00000", "Question": "...", "Choices": [620, 10, 536, 379], "label": 1}
 ```
 
-> ⚠️ **The dataset is not licensed for redistribution and is NOT included in this repo** (it is gitignored, along with results files, which embed dataset content). Place your own copy at `mathqa.jsonl` in the repo root.
+Source: [NLP2025-math](https://www.kaggle.com/competitions/nlp-2025-math) (Kaggle), permitted for **academic use** by the author. The raw data is not redistributed in this repo (it is gitignored, along with results files, which embed dataset content) — obtain it from the Kaggle competition page and place your copy at `mathqa.jsonl` in the repo root.
+
+### Citation
+
+```bibtex
+@misc{nlp-2025-math,
+    author = {zzzzzyyyy},
+    title = {NLP2025-math},
+    year = {2025},
+    howpublished = {\url{https://www.kaggle.com/competitions/nlp-2025-math}},
+    note = {Kaggle}
+}
+```
 
 ## Setup
 
