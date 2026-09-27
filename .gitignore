@@ -9,6 +9,10 @@ mathqa.jsonl.bak
 results.jsonl
 results*.jsonl
 
+# analysis outputs that embed dataset text — keep local
+derived.csv
+errors_sample.md
+
 # python
 venv/
 __pycache__/
