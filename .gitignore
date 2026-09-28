@@ -6,11 +6,11 @@ mathqa.jsonl
 mathqa.jsonl.bak
 
 # results — embed dataset content, keep local
-results.jsonl
-results*.jsonl
+# results.jsonl
+# results*.jsonl
 
 # analysis outputs that embed dataset text — keep local
-derived.csv
+# derived.csv
 errors_sample.md
 
 # python
