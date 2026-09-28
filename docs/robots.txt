@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sakhadib.github.io/JEV_math/sitemap.xml

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Certainty Collapses, Calibration Holds — Typed Confidence in a Non-Reasoning Decision Model</title>
+<meta name="description" content="A System One model evaluated on 13,110 mathematics items across three benchmarks. As difficulty rises its accuracy falls 42 points and its certainty rate falls tenfold, but accuracy when certain stays above 99%: 5,155 full commitments, one genuine error.">
+<link rel="canonical" href="https://sakhadib.github.io/JEV_math/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="author" content="sakhadib">
+<meta name="keywords" content="System One model, Jev-1.13, typed confidence, calibration, selective prediction, math word problems, HARP benchmark, CompMath-MCQ, chain of thought, positional bias, LLM evaluation">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="JEV_math">
+<meta property="og:url" content="https://sakhadib.github.io/JEV_math/">
+<meta property="og:title" content="Certainty Collapses, Calibration Holds">
+<meta property="og:description" content="13,110 mathematics items, four systems, three benchmarks. A model that cannot reason aloud withdraws certainty as the task outruns it, rather than misplacing it.">
+<meta property="og:image" content="https://sakhadib.github.io/JEV_math/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Title card: Certainty Collapses, Calibration Holds. 13,110 items evaluated, 4 systems compared, 5,155 full commitments, 1 genuine error.">
+<meta property="og:locale" content="en_US">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Certainty Collapses, Calibration Holds">
+<meta name="twitter:description" content="A non-reasoning decision model across three mathematics benchmarks: accuracy falls 42 points, certainty falls tenfold, reliability when certain does not move.">
+<meta name="twitter:image" content="https://sakhadib.github.io/JEV_math/img/og.png">
+
+<meta name="theme-color" content="#FCFAF5">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;rect width=%22100%22 height=%22100%22 fill=%22%23FCFAF5%22/&gt;&lt;rect x=%2218%22 y=%2220%22 width=%2218%22 height=%2260%22 fill=%22%23FF2BAF%22/&gt;&lt;rect x=%2244%22 y=%2262%22 width=%2214%22 height=%2218%22 fill=%22%237FE3F0%22/&gt;&lt;rect x=%2266%22 y=%2270%22 width=%2214%22 height=%2210%22 fill=%22%237FE3F0%22/&gt;&lt;/svg&gt;">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Certainty Collapses, Calibration Holds: Typed Confidence in a Non-Reasoning Decision Model Across Three Mathematics Benchmarks",
+  "url": "https://sakhadib.github.io/JEV_math/",
+  "image": "https://sakhadib.github.io/JEV_math/img/og.png",
+  "datePublished": "2026-09-28",
+  "inLanguage": "en",
+  "author": { "@type": "Person", "name": "sakhadib" },
+  "abstract": "A System One model returns a typed decision with a probability distribution in a single forward pass. Evaluated on 13,110 multiple-choice mathematics items across three benchmarks of increasing difficulty, its accuracy falls 42 points while its certainty rate falls tenfold and accuracy conditional on certainty stays above 99 percent.",
+  "keywords": "System One model, typed confidence, calibration, selective prediction, mathematical reasoning, benchmark evaluation",
+  "license": "https://opensource.org/licenses/MIT",
+  "codeRepository": "https://github.com/sakhadib/JEV_math",
+  "about": [
+    { "@type": "Thing", "name": "Model calibration" },
+    { "@type": "Thing", "name": "Selective prediction" },
+    { "@type": "Thing", "name": "Mathematical reasoning benchmarks" }
+  ]
+}
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cream: '#FCFAF5', paper: '#FFFDF8', rule: '#E6E2D9',
+        ink: '#1A1A2E', muted: '#6E7280',
+        mag: '#FF2BAF', cy: '#00B8D4', pink: '#FFAEDC', yel: '#FFD84D'
+      },
+      fontFamily: {
+        serif: ['"EB Garamond"', 'Georgia', 'Cambria', 'serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+      },
+      maxWidth: { reading: '46rem' }
+    }
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { -webkit-font-smoothing: antialiased; }
+  .fig { background: #fff; border: 1px solid #E6E2D9; }
+  .lead { font-size: 1.28rem; line-height: 1.85; }
+  h2 { scroll-margin-top: 5rem; }
+</style>
+</head>
+
+<body class="bg-cream text-ink font-serif antialiased">
+
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:bg-white focus:px-4 focus:py-2 focus:rounded">Skip to content</a>
+
+<div class="h-1.5 bg-mag"></div>
+
+<!-- ============================================ HERO -->
+<header class="px-6 pt-20 pb-16 md:pt-28 md:pb-20">
+  <div class="max-w-5xl mx-auto">
+    <p class="font-sans text-[0.72rem] tracking-[0.22em] uppercase text-muted mb-7">
+      Preprint · Evaluation study · September 2026
+    </p>
+    <h1 class="text-4xl md:text-6xl leading-[1.12] font-semibold tracking-tight mb-8 max-w-4xl">
+      Certainty Collapses,<br>Calibration Holds
+    </h1>
+    <p class="lead text-muted max-w-reading mb-10">
+      Typed confidence in a non-reasoning decision model, measured across three
+      mathematics benchmarks and 13,110 items. The headline accuracy is
+      unremarkable. What the model does with its own uncertainty is not.
+    </p>
+    <div class="flex flex-wrap gap-3 font-sans text-sm">
+      <a href="paper.pdf" class="px-5 py-2.5 bg-ink text-cream rounded-sm hover:bg-mag transition-colors duration-200">Read the paper (PDF)</a>
+      <a href="https://github.com/sakhadib/JEV_math" class="px-5 py-2.5 border border-rule rounded-sm hover:border-ink transition-colors duration-200">Code &amp; data</a>
+      <a href="#findings" class="px-5 py-2.5 border border-rule rounded-sm hover:border-ink transition-colors duration-200">Findings</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============================================ TEASER -->
+<section class="px-6 pb-20" aria-labelledby="teaser-h">
+  <div class="max-w-5xl mx-auto">
+    <figure class="fig rounded-sm p-6 md:p-10">
+      <img src="img/teaser.png" width="1450" height="751" loading="eager" decoding="async"
+           alt="Three rows, one per benchmark, each showing the mean probability vector the model returns. On MathQA-style the leading bar is 0.95 and the model answers at full certainty on 53.4% of items, all correct. On CompMath-MCQ the leading bar is 0.94 and 62.1% are at full certainty, 99.79% correct. On HARP the leading bar falls to 0.58 and only 5.2% are at full certainty, 99.06% correct."
+           class="w-full h-auto">
+      <figcaption id="teaser-h" class="font-sans text-sm text-muted leading-relaxed mt-7 max-w-reading">
+        What the model returns, averaged over every item of each benchmark. Bars are
+        the mean probability vector after sorting each item's distribution descending,
+        so the leading bar is the mean probability placed on the model's own answer
+        and the rest is mass it withholds. As the benchmarks harden the leading bar
+        shortens, the tail fills in, and the share of items answered at maximum
+        confidence falls from 53.4% to 5.2%. Accuracy on those items does not follow
+        it down.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================================ NUMBERS -->
+<section class="px-6 py-16 border-y border-rule bg-paper" aria-label="Headline numbers">
+  <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8">
+    <div>
+      <p class="text-4xl md:text-5xl font-semibold tracking-tight">13,110</p>
+      <p class="font-sans text-sm text-muted mt-2">items across three benchmarks</p>
+    </div>
+    <div>
+      <p class="text-4xl md:text-5xl font-semibold tracking-tight">42<span class="text-2xl align-top">pts</span></p>
+      <p class="font-sans text-sm text-muted mt-2">accuracy range, 96.9% to 54.7%</p>
+    </div>
+    <div>
+      <p class="text-4xl md:text-5xl font-semibold tracking-tight text-mag">5,155</p>
+      <p class="font-sans text-sm text-muted mt-2">answers given at full certainty</p>
+    </div>
+    <div>
+      <p class="text-4xl md:text-5xl font-semibold tracking-tight text-mag">1</p>
+      <p class="font-sans text-sm text-muted mt-2">genuine error among them</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ SETUP -->
+<section class="px-6 py-20 md:py-24" aria-labelledby="setup-h">
+  <div class="max-w-reading mx-auto">
+    <h2 id="setup-h" class="text-3xl md:text-4xl font-semibold tracking-tight mb-8">What was measured</h2>
+    <p class="lead mb-6">
+      A <em>System One</em> model takes a block of text and a typed question, and
+      returns one option plus a probability for every option, in a single forward
+      pass. No chain of thought, no sampling, no text to parse. Jev-1.13 is the
+      first such model.
+    </p>
+    <p class="lead mb-6">
+      Multi-step arithmetic is the canonical case where language models benefit from
+      reasoning aloud, so a model that structurally cannot should be poorly suited to
+      it. The interesting question is not only whether it is, but whether it
+      <em>knows</em> it is. Answering that needs difficulty that varies, so the same
+      protocol ran over three benchmarks spanning a 42-point accuracy range, against
+      three chat models on identical items.
+    </p>
+    <div class="mt-12 space-y-px font-sans text-[0.95rem]">
+      <div class="grid grid-cols-12 gap-4 py-4 border-t border-rule">
+        <div class="col-span-12 md:col-span-4 font-medium">MathQA-style</div>
+        <div class="col-span-12 md:col-span-8 text-muted">7,473 four-option word problems. Weak instrument: 70.6% of answers are the smallest option.</div>
+      </div>
+      <div class="grid grid-cols-12 gap-4 py-4 border-t border-rule">
+        <div class="col-span-12 md:col-span-4 font-medium">CompMath-MCQ</div>
+        <div class="col-span-12 md:col-span-8 text-muted">1,527 three-option undergraduate items. 23.5% are number-substituted instances of shared skeletons.</div>
+      </div>
+      <div class="grid grid-cols-12 gap-4 py-4 border-t border-b border-rule">
+        <div class="col-span-12 md:col-span-4 font-medium">HARP</div>
+        <div class="col-span-12 md:col-span-8 text-muted">4,110 five-option US competition items, with per-item difficulty levels. The one that actually separates systems.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ FINDINGS -->
+<section id="findings" class="px-6 py-20 md:py-24 bg-paper border-y border-rule" aria-labelledby="findings-h">
+  <div class="max-w-5xl mx-auto">
+    <h2 id="findings-h" class="text-3xl md:text-4xl font-semibold tracking-tight mb-4">Findings</h2>
+    <p class="lead text-muted max-w-reading mb-16">Five results, in the order they change what you should believe.</p>
+
+    <!-- 1 -->
+    <article class="mb-20">
+      <p class="font-sans text-[0.72rem] tracking-[0.22em] uppercase text-mag mb-4">Finding 01</p>
+      <h3 class="text-2xl md:text-3xl font-semibold tracking-tight mb-6 max-w-reading">The model withdraws certainty rather than misplacing it</h3>
+      <div class="max-w-reading space-y-5 lead">
+        <p>
+          Across the three benchmarks accuracy falls from 96.94% to 54.70%. Over the
+          same range, the fraction of items on which the model commits fully, placing
+          probability 1 on a single option, falls from 53.4% to 5.2%. On the hardest
+          benchmark it commits about once in twenty items.
+        </p>
+        <p>
+          Accuracy on those committed items barely moves: 100.00%, then 99.79%, then
+          99.06%. This is the failure mode the result excludes. A component whose
+          confidence stays high while its accuracy falls is worse than useless in a
+          routing system, because it fails silently and at scale.
+        </p>
+      </div>
+      <figure class="fig rounded-sm p-5 md:p-8 mt-10">
+        <img src="img/simplex3.png" width="1443" height="433" loading="lazy" decoding="async"
+             alt="Three 3D histograms of the two largest returned probabilities. On the two easier benchmarks a tall tower stands where the top probability equals 1. On HARP the tower is gone, replaced by a broad ridge of hedged distributions, with errors spread across the surface."
+             class="w-full h-auto">
+        <figcaption class="font-sans text-sm text-muted leading-relaxed mt-6">
+          The same result in the shape of the distributions. The tower at full
+          confidence on the two easier benchmarks is the model committing; on HARP it
+          is gone, and errors that were confined to the low-confidence margin now
+          occupy most of the surface.
+        </figcaption>
+      </figure>
+    </article>
+
+    <!-- 2 -->
+    <article class="mb-20">
+      <p class="font-sans text-[0.72rem] tracking-[0.22em] uppercase text-mag mb-4">Finding 02</p>
+      <h3 class="text-2xl md:text-3xl font-semibold tracking-tight mb-6 max-w-reading">Deferral works beautifully, until it does not</h3>
+      <div class="max-w-reading space-y-5 lead">
+        <p>
+          Abstaining on the least-confident 10% of items lifts accuracy to 99.70% on
+          the easiest benchmark. The same rule on competition mathematics lifts it
+          from 54.70% to only 58.04%.
+        </p>
+        <p>
+          Thresholding converts confidence into accuracy, and on hard data there is
+          little confidence to convert. This is the honest boundary of the deployment
+          argument: the signal stays informative in both regimes, but what it is worth
+          depends entirely on where your workload sits.
+        </p>
+      </div>
+      <figure class="fig rounded-sm p-5 md:p-8 mt-10">
+        <img src="img/coverage3.png" width="670" height="477" loading="lazy" decoding="async"
+             alt="Accuracy on retained items as coverage falls. The two easier benchmarks sit near 100% across the whole range. HARP rises only from 54.7% at full coverage to about 89% even when 70% of items are deferred."
+             class="w-full h-auto max-w-2xl mx-auto">
+        <figcaption class="font-sans text-sm text-muted leading-relaxed mt-6">
+          Accuracy on retained items as coverage falls. Even abstaining on 70% of HARP
+          leaves accuracy under 89%.
+        </figcaption>
+      </figure>
+    </article>
+
+    <!-- 3 -->
+    <article class="mb-20">
+      <p class="font-sans text-[0.72rem] tracking-[0.22em] uppercase text-mag mb-4">Finding 03</p>
+      <h3 class="text-2xl md:text-3xl font-semibold tracking-tight mb-6 max-w-reading">Positional bias is not a model property. It appears under uncertainty</h3>
+      <div class="max-w-reading space-y-5 lead">
+        <p>
+          On both easier benchmarks the model's predicted option marginals are
+          indistinguishable from the answer key, which in a single-benchmark study
+          would read as a clean bill of health. On HARP the same test returns
+          <span class="whitespace-nowrap">p = 2.3 × 10<sup>−15</sup></span>. It
+          over-picks the first and last options and avoids the middle.
+        </p>
+        <p>
+          Splitting by confidence localises it. The divergence lives almost entirely
+          in low-confidence items and vanishes where the model is confident. It is not
+          positionally biased; it falls back on an edge-position heuristic when it
+          does not know. The consequence for practice: a position-bias null measured
+          on a benchmark a model finds easy carries no information about its behaviour
+          on a harder one.
+        </p>
+      </div>
+      <figure class="fig rounded-sm p-5 md:p-8 mt-10">
+        <img src="img/position.png" width="1219" height="418" loading="lazy" decoding="async"
+             alt="Option marginals against the answer key in three confidence bands. In the low-confidence band the model over-selects options A and E and under-selects C. In the high-confidence band its marginals track the key closely."
+             class="w-full h-auto">
+        <figcaption class="font-sans text-sm text-muted leading-relaxed mt-6">
+          Predicted marginals against the key, split by confidence band. Grey is the
+          key, magenta is the model. The bias is present on the left and gone on the
+          right.
+        </figcaption>
+      </figure>
+    </article>
+
+    <!-- 4 -->
+    <article class="mb-20">
+      <p class="font-sans text-[0.72rem] tracking-[0.22em] uppercase text-mag mb-4">Finding 04</p>
+      <h3 class="text-2xl md:text-3xl font-semibold tracking-tight mb-6 max-w-reading">Three of its four confident errors were mistakes in the benchmarks</h3>
+      <div class="max-w-reading space-y-5 lead">
+        <p>
+          Across 13,110 items the model answered at full certainty 5,155 times and was
+          scored wrong four times. That is small enough to inspect, so all four were
+          adjudicated by hand against the source mathematics.
+        </p>
+      </div>
+      <div class="max-w-reading mt-8 space-y-px font-sans text-[0.95rem]">
+        <div class="grid grid-cols-12 gap-4 py-5 border-t border-rule">
+          <div class="col-span-12 md:col-span-3 text-mag font-medium">Key error</div>
+          <div class="col-span-12 md:col-span-9 text-muted">A Gaussian density proportional to exp{−(x−3)²/8} has variance 4. The model answered 4; the key records 2, which is the standard deviation.</div>
+        </div>
+        <div class="grid grid-cols-12 gap-4 py-5 border-t border-rule">
+          <div class="col-span-12 md:col-span-3 text-mag font-medium">Key error</div>
+          <div class="col-span-12 md:col-span-9 text-muted">Asked which NumPy function accepts a separate array of weights, the model answered <code class="text-ink">np.average</code>, which has a <code class="text-ink">weights</code> argument. The key records <code class="text-ink">np.mean</code>, which does not.</div>
+        </div>
+        <div class="grid grid-cols-12 gap-4 py-5 border-t border-rule">
+          <div class="col-span-12 md:col-span-3 text-mag font-medium">Key error</div>
+          <div class="col-span-12 md:col-span-9 text-muted">For a triangle circumscribing a circle of radius r, the incircle identity K = rP/2 gives P/K = 2/r. The model answered that, as did both other systems that answered. The key records 2/√r.</div>
+        </div>
+        <div class="grid grid-cols-12 gap-4 py-5 border-t border-b border-rule">
+          <div class="col-span-12 md:col-span-3 font-medium">Model error</div>
+          <div class="col-span-12 md:col-span-9 text-muted">Under right-to-left grouping, a ÷ b − c + d reads as a/(b−c−d). The model returned a/(b−c+d), a sign error. This one is real.</div>
+        </div>
+      </div>
+      <div class="max-w-reading space-y-5 lead mt-8">
+        <p>
+          The corrected record is 5,154 of 5,155. A second observation follows: if
+          maximum-confidence disagreement with a key is more often a key error than a
+          model error, it is a cheap auditing signal for benchmark quality. Four items
+          to check across 13,110 yielded three corrections.
+        </p>
+      </div>
+    </article>
+
+    <!-- 5 -->
+    <article>
+      <p class="font-sans text-[0.72rem] tracking-[0.22em] uppercase text-mag mb-4">Finding 05</p>
+      <h3 class="text-2xl md:text-3xl font-semibold tracking-tight mb-6 max-w-reading">A no-reasoning protocol cannot be enforced by asking</h3>
+      <div class="max-w-reading space-y-5 lead">
+        <p>
+          The chat baselines were told to answer with only a letter and to show no
+          work, at temperature 0 with reasoning effort set to low. One complied. One
+          was billed for hidden reasoning tokens on 93% of items, a mean of 274 per
+          item on the hardest benchmark, and its visible output was still a bare
+          letter. Its accuracy was bought with chain of thought nobody could see.
+        </p>
+        <p>
+          A third reports zero reasoning tokens but produced 488 replies that
+          exhausted the token budget and returned nothing, which is the signature of
+          deliberation that was never billed. Billed reasoning tokens are a partial
+          diagnostic; unbilled deliberation is not observable at all.
+        </p>
+      </div>
+      <figure class="fig rounded-sm p-5 md:p-8 mt-10">
+        <img src="img/difficulty.png" width="656" height="477" loading="lazy" decoding="async"
+             alt="Accuracy by HARP difficulty level for four systems. The reasoning-capable systems start near 85% and fall steeply; the single-pass model is flat near 55%. By level 4 the 20B reasoning model has fallen to 43.5%, no longer separating from the single-pass model at 46.2%."
+             class="w-full h-auto max-w-2xl mx-auto">
+        <figcaption class="font-sans text-sm text-muted leading-relaxed mt-6">
+          Accuracy by difficulty level. The reasoning systems start much higher and
+          fall steeply. One of them leads by 15.6 points overall, yet by level 4 its
+          advantage has gone: hidden deliberation buys a great deal on easy items and
+          nothing on hard ones.
+        </figcaption>
+      </figure>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================ RESULTS TABLE -->
+<section class="px-6 py-20 md:py-24" aria-labelledby="results-h">
+  <div class="max-w-5xl mx-auto">
+    <h2 id="results-h" class="text-3xl md:text-4xl font-semibold tracking-tight mb-4">Accuracy, in full</h2>
+    <p class="lead text-muted max-w-reading mb-12">
+      Option counts differ across benchmarks, so the guessing floors differ too and
+      the magnitudes are not directly comparable. The ordering is.
+    </p>
+    <div class="overflow-x-auto">
+      <table class="w-full font-sans text-[0.95rem] border-collapse">
+        <caption class="sr-only">End-to-end accuracy by system and benchmark</caption>
+        <thead>
+          <tr class="border-b-2 border-ink">
+            <th scope="col" class="text-left py-4 pr-6 font-medium">System</th>
+            <th scope="col" class="text-right py-4 px-4 font-medium">MathQA-style<span class="block text-xs text-muted font-normal">4 options</span></th>
+            <th scope="col" class="text-right py-4 px-4 font-medium">CompMath-MCQ<span class="block text-xs text-muted font-normal">3 options</span></th>
+            <th scope="col" class="text-right py-4 pl-4 font-medium">HARP<span class="block text-xs text-muted font-normal">5 options</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-rule">
+            <th scope="row" class="text-left py-4 pr-6 font-normal">space-bunny-alpha</th>
+            <td class="text-right py-4 px-4 tabular-nums">97.11</td>
+            <td class="text-right py-4 px-4 tabular-nums">95.35</td>
+            <td class="text-right py-4 pl-4 tabular-nums font-semibold text-mag">81.29</td>
+          </tr>
+          <tr class="border-b border-rule">
+            <th scope="row" class="text-left py-4 pr-6 font-normal">gpt-oss-20b</th>
+            <td class="text-right py-4 px-4 tabular-nums font-semibold text-mag">98.30</td>
+            <td class="text-right py-4 px-4 tabular-nums font-semibold text-mag">96.79</td>
+            <td class="text-right py-4 pl-4 tabular-nums">70.29</td>
+          </tr>
+          <tr class="border-b border-rule bg-paper">
+            <th scope="row" class="text-left py-4 pr-6 font-medium">Jev-1.13</th>
+            <td class="text-right py-4 px-4 tabular-nums">96.94</td>
+            <td class="text-right py-4 px-4 tabular-nums">94.89</td>
+            <td class="text-right py-4 pl-4 tabular-nums">54.70</td>
+          </tr>
+          <tr class="border-b border-rule">
+            <th scope="row" class="text-left py-4 pr-6 font-normal">llama-3.1-8b</th>
+            <td class="text-right py-4 px-4 tabular-nums">40.09</td>
+            <td class="text-right py-4 px-4 tabular-nums">60.12</td>
+            <td class="text-right py-4 pl-4 tabular-nums">18.32</td>
+          </tr>
+          <tr class="text-muted">
+            <th scope="row" class="text-left py-4 pr-6 font-normal italic">random floor</th>
+            <td class="text-right py-4 px-4 tabular-nums">25.0</td>
+            <td class="text-right py-4 px-4 tabular-nums">33.3</td>
+            <td class="text-right py-4 pl-4 tabular-nums">20.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="font-sans text-sm text-muted mt-6 max-w-reading leading-relaxed">
+      End-to-end accuracy in percent: a reply from which no option can be parsed counts
+      as wrong, because a component that must return a decision has failed to return
+      one. The typed model returned a parseable decision on every one of 13,110 items
+      by construction; the chat baselines failed to on between 7 and 867 items each.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================ HONEST -->
+<section class="px-6 py-20 md:py-24 bg-paper border-y border-rule" aria-labelledby="honest-h">
+  <div class="max-w-reading mx-auto">
+    <h2 id="honest-h" class="text-3xl md:text-4xl font-semibold tracking-tight mb-8">What this does not show</h2>
+    <div class="space-y-5 lead">
+      <p>
+        No claim that a System One model is better at mathematics than chat models
+        survives this evidence, and the paper makes none. On competition mathematics
+        it trails a stealth frontier model by 26.6 points.
+      </p>
+      <p>
+        Contamination cannot be ruled out. All three benchmarks predate or may predate
+        the training cutoffs of the systems measured, and competition mathematics is
+        heavily reproduced online. One benchmark can be shown to be intrinsically easy
+        rather than merely memorised, because a model released seven months before it
+        was published still scores 96.79% on it. The same cannot be established for
+        the typed model, whose training data is undisclosed.
+      </p>
+      <p>
+        The baseline is narrow: three models, one prompt, one run each, no frontier
+        chat model, and one of the three is an undocumented endpoint whose identity and
+        size cannot be verified. The adjudication of the four confident errors was done
+        by one author; the paper reports as-scored figures throughout so that no
+        headline depends on accepting it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ REPRODUCE -->
+<section class="px-6 py-20 md:py-24" aria-labelledby="repro-h">
+  <div class="max-w-reading mx-auto">
+    <h2 id="repro-h" class="text-3xl md:text-4xl font-semibold tracking-tight mb-8">Reproducing it</h2>
+    <p class="lead mb-8">
+      Every run recorded the complete unmodified API response, so each number is
+      re-derivable. The analysis is a single deterministic script per phase. Benchmark
+      data is not redistributed; obtain it from the sources below.
+    </p>
+    <div class="font-sans text-sm space-y-px">
+      <div class="grid grid-cols-12 gap-4 py-4 border-t border-rule">
+        <div class="col-span-5 md:col-span-3 font-medium">MathQA-style</div>
+        <div class="col-span-7 md:col-span-9"><a class="underline decoration-rule underline-offset-4 hover:decoration-ink" href="https://www.kaggle.com/competitions/nlp-2025-math">NLP2025-math, Kaggle</a></div>
+      </div>
+      <div class="grid grid-cols-12 gap-4 py-4 border-t border-rule">
+        <div class="col-span-5 md:col-span-3 font-medium">CompMath-MCQ</div>
+        <div class="col-span-7 md:col-span-9"><a class="underline decoration-rule underline-offset-4 hover:decoration-ink" href="https://arxiv.org/abs/2603.03334">Raimondi et al., arXiv:2603.03334</a></div>
+      </div>
+      <div class="grid grid-cols-12 gap-4 py-4 border-t border-b border-rule">
+        <div class="col-span-5 md:col-span-3 font-medium">HARP</div>
+        <div class="col-span-7 md:col-span-9"><a class="underline decoration-rule underline-offset-4 hover:decoration-ink" href="https://github.com/aadityasingh/HARP">Yue et al., github.com/aadityasingh/HARP</a></div>
+      </div>
+    </div>
+    <div class="mt-10 p-6 border border-rule rounded-sm bg-paper">
+      <p class="font-sans text-sm text-muted leading-relaxed">
+        <span class="text-ink font-medium">One trap worth repeating.</span> When
+        binning the returned probabilities, build histogram edges so the final edge
+        lies strictly above 1.0. Edges accumulated from a floating-point step can stop
+        just below it and silently discard every item whose top probability is exactly
+        1.0, which on the easiest benchmark is over half the data and precisely the
+        subset carrying the central result.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ CITE -->
+<section class="px-6 py-20 md:py-24 bg-paper border-t border-rule" aria-labelledby="cite-h">
+  <div class="max-w-reading mx-auto">
+    <h2 id="cite-h" class="text-3xl md:text-4xl font-semibold tracking-tight mb-8">Cite</h2>
+    <pre class="font-sans text-[0.82rem] leading-relaxed bg-white border border-rule rounded-sm p-6 overflow-x-auto"><code>@misc{jevmath2026,
+  title  = {Certainty Collapses, Calibration Holds: Typed Confidence
+            in a Non-Reasoning Decision Model Across Three
+            Mathematics Benchmarks},
+  author = {Adib, Sakhawat},
+  year   = {2026},
+  url    = {https://github.com/sakhadib/JEV_math}
+}</code></pre>
+  </div>
+</section>
+
+</main>
+
+<footer class="px-6 py-14 border-t border-rule">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6 font-sans text-sm text-muted">
+    <p>Evaluation study, September 2026. Benchmark data not redistributed.</p>
+    <nav class="flex gap-6" aria-label="Footer">
+      <a class="hover:text-ink transition-colors" href="paper.pdf">Paper</a>
+      <a class="hover:text-ink transition-colors" href="https://github.com/sakhadib/JEV_math">Repository</a>
+      <a class="hover:text-ink transition-colors" href="#main">Top</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
