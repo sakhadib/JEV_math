@@ -34,7 +34,7 @@ PROMPT_TEMPLATE = """{question}
 Options:
 {options}
 
-Answer with only the letter of the correct option ({letter_list}). Do not explain, do not show any work."""
+Answer with only the letter of the correct option ({letter_list}). Do not explain, do not show any work. REASONING IS PROHIBITED"""
 
 _write_lock = threading.Lock()
 _rate_lock = threading.Lock()
