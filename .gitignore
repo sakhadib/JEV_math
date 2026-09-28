@@ -17,3 +17,7 @@ errors_sample.md
 venv/
 __pycache__/
 *.pyc
+
+# phase 2 dataset — not redistributed, cite arXiv:2603.03334
+phase_2/mcq_lm_eval_data.jsonl
+phase_2/mcq_lm_eval_data.jsonl.bak

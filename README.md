@@ -28,6 +28,26 @@ Source: [NLP2025-math](https://www.kaggle.com/competitions/nlp-2025-math) (Kaggl
 }
 ```
 
+## Phase 2: CompMath-MCQ
+
+Phase 1 revealed the NLP2025-math dataset to be a weak test (eliminable distractors, all-integer golds). Phase 2 (everything under `phase_2/`) repeats the experiment — Jev plus the three chat baselines — on **CompMath-MCQ**: 1,527 three-option multiple-choice items covering higher-level mathematics (linear algebra, calculus, probability, …) with LaTeX-formatted questions and options.
+
+We gratefully acknowledge the dataset authors. Source: [arXiv:2603.03334](https://arxiv.org/abs/2603.03334). The raw data is not redistributed in this repo (`phase_2/mcq_lm_eval_data.jsonl` is gitignored); obtain it from the authors' distribution channels.
+
+### Citation
+
+```bibtex
+@misc{raimondi2026compmathmcqdatasetllmsready,
+      title={The CompMath-MCQ Dataset: Are LLMs Ready for Higher-Level Math?},
+      author={Bianca Raimondi and Francesco Pivi and Davide Evangelista and Maurizio Gabbrielli},
+      year={2026},
+      eprint={2603.03334},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2603.03334},
+}
+```
+
 ## Setup
 
 ```bash
