@@ -48,6 +48,21 @@ We gratefully acknowledge the dataset authors. Source: [arXiv:2603.03334](https:
 }
 ```
 
+## Phase 3: HARP
+
+Phase 3 (everything under `phase_3/`) runs the final experiment on **HARP** — a challenging human-annotated benchmark of US competition mathematics (AHSME/AJHSME/AMC 8/10/12): 4,110 five-option items with level (1–4), subject, contest, and year metadata. We gratefully acknowledge the HARP authors. Source: [github.com/aadityasingh/HARP](https://github.com/aadityasingh/HARP). The raw data is not redistributed in this repo (`phase_3/HARP_mcq.jsonl` is gitignored).
+
+### Citation
+
+```bibtex
+@misc{yue2024harp,
+    title={{HARP}: A challenging human-annotated math reasoning benchmark},
+    author={Albert S. Yue and Lovish Madaan and Ted Moskovitz and DJ Strouse and Aaditya K. Singh},
+    year={2024},
+    url={https://github.com/aadityasingh/HARP}
+}
+```
+
 ## Setup
 
 ```bash

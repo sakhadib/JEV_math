@@ -21,3 +21,7 @@ __pycache__/
 # phase 2 dataset — not redistributed, cite arXiv:2603.03334
 phase_2/mcq_lm_eval_data.jsonl
 phase_2/mcq_lm_eval_data.jsonl.bak
+
+# phase 3 dataset — not redistributed, cite github.com/aadityasingh/HARP
+phase_3/HARP_mcq.jsonl
+phase_3/HARP_mcq.jsonl.bak
