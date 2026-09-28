@@ -1,0 +1,5 @@
+system,accuracy,n,cost_total,latency_p50_ms,confidence_signal,never_confidently_wrong
+jev-1.13,0.9692225344573799,7473,0.129608094,794.0,yes (per-option distribution),yes (0/3993 at p=1.0)
+llama-3.1-8b-instruct,0.40090994245952094,7473,0.02201642289,1154.9,no (bare letter),n/a
+gpt-oss-20b,0.9830054864177706,7473,0.14044209102,1817.0,no (bare letter),n/a
+space-bunny-alpha,0.9710959454034525,7473,0.0,1426.9,no (bare letter),n/a
